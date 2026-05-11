@@ -56,13 +56,18 @@ done
 for i in $DDIRS
 do
   echo "Docker: Starting $i..."
+  # Check if NAS is a pre-requisite.
   if test -f $i/prereq.nas; then
+    # If NAS is a pre-requisite, check if it is mounted.
     if test -f $NAS_MOUNT_CHECK; then
+      # Test passed, bring up docker container.
       docker compose -f ~/$i/docker-compose.yml up -d
     else
+      # Test failed.
       echo "Docker: ERROR: NAS Not Mounted... Skipping $i"
     fi
   else
+    # NAS is not a prerequisite, just bring up the container.
     docker compose -f ~/$i/docker-compose.yml up -d
   fi
 done
