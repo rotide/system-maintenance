@@ -8,6 +8,8 @@ DDIRS=`ls ~ | grep docker-`
 BDIR=~/backups
 # Set Backup Timestamp
 BTS=$(date +%Y%m%d%H%M%S)
+# NAS Mount Check Location
+NAS_MOUNT_CHECK=/mnt/downloads/seagate4tb/MOUNTED
 
 # Create backup directory if it doesn't exist
 if ! test -d $BDIR; then
@@ -50,13 +52,19 @@ do
   docker compose -f ~/$i/docker-compose.yml pull
 done
 
-# Docker: Pre-Up Verification/Scripts
-
 # Docker: Up/Start
 for i in $DDIRS
 do
   echo "Docker: Starting $i..."
-  docker compose -f ~/$i/docker-compose.yml up -d
+  if test -f $i/prereq.nas; then
+    if test -f $NAS_MOUNT_CHECK; then
+      docker compose -f ~/$i/docker-compose.yml up -d
+    else
+      echo "Docker: ERROR: NAS Not Mounted... Skipping $i"
+    fi
+  else
+    docker compose -f ~/$i/docker-compose.yml up -d
+  fi
 done
 
 # If reboot required (Apt Update), reboot.
