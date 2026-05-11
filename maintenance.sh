@@ -33,7 +33,7 @@ done
 for i in $DDIRS
 do
   echo "Docker: Backing Up $i..."
-  sudo tar -czf $BDIR/$i.backup.$BTS.tar.gz $i
+  sudo tar -czf $BDIR/backup.$i.$BTS.tar.gz $i
 done
 
 # Docker: Remove old files/images
