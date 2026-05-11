@@ -1,24 +1,45 @@
 #!/bin/bash
 
-#docker compose -f ~/$1/docker-compose.yml rm -f
-#docker compose -f ~/$1/docker-compose.yml pull
-#docker compose -f ~/$1/docker-compose.yml up -d
-
 echo "Maintenance Script Starting..."
 
-# Update OS (Apt)
-echo "Maintenance: Updating OS..."
+# Patch/Update OS (Apt)
+echo "Maintenance: Patching OS..."
 sudo apt update
 sudo apt upgrade -y
 sudo apt autoremove
 sudo apt clean
-echo "Maintenance: Updating OS - Complete."
+echo "Maintenance: Patching OS - Complete."
 
 # Docker: Stop
 for i in `ls | grep docker-`
 do
   echo "Docker: Stopping $i..."
   docker compose -f ~/$i/docker-compose.yml stop
+done
+
+# Docker: Backup
+
+# Docker: Remove old files/images
+for i in `ls | grep docker-`
+do
+  echo "Docker: Cleaning $i..."
+  docker compose -f ~/$i/docker-compose.yml rm -f
+done
+
+# Docker: Pull fresh
+for i in `ls | grep docker-`
+do
+  echo "Docker: Pulling $i..."
+  docker compose -f ~/$i/docker-compose.yml pull
+done
+
+# Docker: Pre-Up Verification/Scripts
+
+# Docker: Up/Start
+for i in `ls | grep docker-`
+do
+  echo "Docker: Starting $i..."
+  docker compose -f ~/$i/docker-compose.yml up -d
 done
 
 # If reboot required (Apt Update), reboot.
