@@ -5,7 +5,9 @@ echo "Maintenance Script Starting..."
 # Get docker folders
 DDIRS=`ls /home/rotide | grep docker-`
 # Set Backup Dir
-BDIR=/home/rotide/backups/
+BDIR=/home/rotide/backups
+# Set Backup Timestamp
+BTS=$(date +%Y%m%d%H%M%S)
 
 # Patch/Update OS (Apt)
 echo "Maintenance: Patching OS..."
@@ -23,6 +25,11 @@ do
 done
 
 # Docker: Backup
+for i in $DDIRS
+do
+  echo "Docker: Backing Up $i..."
+  sudo tar -czf $BDIR/$i.backup.$BTS.tar.gz ~/$i
+done
 
 # Docker: Remove old files/images
 for i in $DDIRS
