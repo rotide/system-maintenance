@@ -12,6 +12,7 @@ BTS=$(date +%Y%m%d%H%M%S)
 # Create backup directory if it doesn't exist
 if ! test -d $BDIR; then
   mkdir $BDIR
+fi
 
 # Patch/Update OS (Apt)
 echo "Maintenance: Patching OS..."
