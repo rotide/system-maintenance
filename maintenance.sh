@@ -2,6 +2,11 @@
 
 echo "Maintenance Script Starting..."
 
+# Get docker folders
+DDIRS=`ls /home/rotide | grep docker-`
+# Set Backup Dir
+BDIR=/home/rotide/backups/
+
 # Patch/Update OS (Apt)
 echo "Maintenance: Patching OS..."
 sudo apt update
@@ -9,9 +14,6 @@ sudo apt upgrade -y
 sudo apt autoremove
 sudo apt clean
 echo "Maintenance: Patching OS - Complete."
-
-# Get docker folders
-DDIRS=`ls /home/rotide | grep docker-`
 
 # Docker: Stop
 for i in $DDIRS
